@@ -1,0 +1,34 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Python: Current File",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/src/__main__.py",
+            "python": "/Users/liaduerr/.local/share/virtualenvs/Pamaxie.ScanClient-Vt-Pk883/bin/python3.9",
+            "console": "integratedTerminal",
+            "justMyCode": true,
+            "django": true,
+
+            /*
+            Set startup Args
+            "args": [
+                "arg1",
+                "arg2"
+            ],
+            */
+
+
+            "env": {
+                "PAM_API_TOKEN": "PamToken/-//981258597059010560/-//981258794212278272/-//cwcsor+A7Q8IFdjTdipZbUNsHkJrtXcBa9a4UmhYu2Yo9vSAOKZJkv7V/Py9E3Xu82SK0cnMh30LXk/x4PeQ5A==",
+                "PAM_SCAN_ENDPOINT": "http://localhost:8080/",
+                "PAM_DB_ENDPOINT": "https://api.pamaxie.com/",
+            }
+            
+        }
+    ]
+}
