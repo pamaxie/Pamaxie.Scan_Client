@@ -25,14 +25,22 @@ def get_work_loop(jwt_token):
         work_result = api_requests.get_work(jwt_token)
 
         if work_result is None:
-            raise ValueError("The returned value of work result is incorrect")
+            continue
 
         if work_result[0] == 401:
-            jwt_token = login_api()
-            continue
+            try:
+                jwt_token = login_api()
+            except ConnectionError:
+                print("We could not connect to our database API. Please check that it's available.")
+            finally:
+                continue
+
 
         if work_result[0] == 408:
             print("We couldn't find any work for now.")
+            continue
+
+        if work_result[1] is None:
             continue
 
         print("Found some work and starting the detection for it.")

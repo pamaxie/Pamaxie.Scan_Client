@@ -7,17 +7,22 @@ import env
 def test_connection() -> bool:
     '''Test if the API is available for requests'''
     print("Checking if our service is currently available...")
-    request_url = env.get_scan_endpoint() + "scan/v1/status"
-    response = requests.get(request_url)
-    if response.status_code == 200:
-        payload = json.loads(response.text)
 
-        if payload is not None and payload.get("SCAN_STATUS") == "Ok" and payload.get("DB_STATUS") == "Ok":
-            print("Scanning API is available and database is available.")
-            return True
+    try:
+        request_url = env.get_scan_endpoint() + "scan/v1/status"
+        response = requests.get(request_url)
+        if response.status_code == 200:
+            payload = json.loads(response.text)
 
-    print("Some of our API endpoints are not available. Please try again later or check your internet connection.")
-    return False
+            if payload is not None and payload.get("SCAN_STATUS") == "Ok" and payload.get("DB_STATUS") == "Ok":
+                print("Scanning API is available and database is available.")
+                return True
+
+        print("Some of our API endpoints are not available. Please try again later or check your internet connection.")
+        return False
+    except requests.exceptions.ConnectionError:
+        print("Some of our API endpoints are not available. Please try again later or check your internet connection.")
+        return False
 
 def get_jwt_token(auth_token) -> String:
     '''Get the authentication token from the api'''
@@ -25,19 +30,22 @@ def get_jwt_token(auth_token) -> String:
     if auth_token is None or auth_token == "":
         raise ValueError("The parameter auth_token cannot be empty")
 
-    request_url = env.get_db_endpoint() + "db/v1/scan/login"
-    response = requests.get(request_url, headers={"Authorization": "Token " + auth_token})
+    try:
+        request_url = env.get_db_endpoint() + "db/v1/scan/login"
+        response = requests.get(request_url, headers={"Authorization": "Token " + auth_token})
 
-    if response.status_code == 200:
-        payload = json.loads(response.text)
+        if response.status_code == 200:
+            payload = json.loads(response.text)
 
-        if payload is not None and payload.get("Token") != "":
-            token_payload = payload.get("Token")
+            if payload is not None and payload.get("Token") != "":
+                token_payload = payload.get("Token")
 
-            if token_payload.get("Token") != "":
-                return token_payload.get("Token")
+                if token_payload.get("Token") != "":
+                    return token_payload.get("Token")
 
-    return None
+        return None
+    except requests.exceptions.ConnectionError:
+        return None
 
 def post_result(jwt_token, work_result) -> bool:
     '''Get work from the API, returns status code and Image Data'''
@@ -48,13 +56,16 @@ def post_result(jwt_token, work_result) -> bool:
     if jwt_token is None or jwt_token == "":
         raise ValueError("The parameter work_result cannot be empty")
 
-    request_url = env.get_scan_endpoint() + "scan/v1/worker/post_result"
-    response = requests.post(request_url, headers={"Authorization": "Bearer " + jwt_token}, data=work_result)
+    try:
+        request_url = env.get_scan_endpoint() + "scan/v1/worker/post_result"
+        response = requests.post(request_url, headers={"Authorization": "Bearer " + jwt_token}, data=work_result)
 
-    if response.status_code == 200:
-        return True
+        if response.status_code == 200:
+            return True
 
-    return False
+        return False
+    except requests.exceptions.ConnectionError:
+        return False
 
 def get_work(jwt_token):
     '''Get work from the API, returns status code and Image Data'''
@@ -62,10 +73,13 @@ def get_work(jwt_token):
     if jwt_token is None or jwt_token == "":
         raise ValueError("The parameter jwt_token cannot be empty")
 
-    request_url = env.get_scan_endpoint() + "scan/v1/worker/get_work"
-    response = requests.get(request_url, headers={"Authorization": "Bearer " + jwt_token})
+    try:
+        request_url = env.get_scan_endpoint() + "scan/v1/worker/get_work"
+        response = requests.get(request_url, headers={"Authorization": "Bearer " + jwt_token})
 
-    if response.status_code == 200:
-        return response.status_code, response.text
+        if response.status_code == 200:
+            return response.status_code, response.text
 
-    return response.status_code, None
+        return response.status_code, None
+    except requests.exceptions.ConnectionError:
+        return None

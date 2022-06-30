@@ -24,9 +24,9 @@
 
 
             "env": {
-                "PAM_API_TOKEN": "PamToken/-//981258597059010560/-//981258794212278272/-//cwcsor+A7Q8IFdjTdipZbUNsHkJrtXcBa9a4UmhYu2Yo9vSAOKZJkv7V/Py9E3Xu82SK0cnMh30LXk/x4PeQ5A==",
+                "PAM_API_TOKEN": "PamToken/-//991838474724188160/-//991838548837548032/-//JLXaV0I1+NMdyD543sUOcmzuezG+Sa2f+mhL9ufkqOO5CYn2j5ylYagSklEd2aQqRqlJbYyk5+a7aKXiYXaIrw==",
                 "PAM_SCAN_ENDPOINT": "http://localhost:8080/",
-                "PAM_DB_ENDPOINT": "https://api.pamaxie.com/",
+                "PAM_DB_ENDPOINT": "http://localhost/",
             }
             
         }
