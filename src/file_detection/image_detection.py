@@ -33,16 +33,16 @@ def detect_image(image_url, image_extension, image_hash, safety_net_model, symbo
     symbol_predictions = symbol_net_model.predict(img_array)
     symbol_scores = tf.nn.softmax(symbol_predictions[0])
     symbol_score_percentage = 100 * np.max(symbol_scores)
-    symbol_predicted_class = CLASS_NAMES_SAFETY_NET[np.argmax(symbol_scores)]
+    symbol_predicted_class = CLASS_NAMES_SYMBOL_NET[np.argmax(symbol_scores)]
 
     gore_likelihood = 100 * np.max(safety_scores[0])
     safety_none_likelihood = 100 * np.max(safety_scores[1])
     pronographic_likelihood = 100 *np.max(safety_scores[2])
     racy_likelihood = 100 * np.max(safety_scores[3])
 
-    hitler_liklihood = 100 * np.max(safety_scores[0])
-    swastika_liklihood = 100 * np.max(safety_scores[1])
-    symbol_none_liklihood = 100 * np.max(safety_scores[2])
+    hitler_liklihood = 100 * np.max(symbol_scores[0])
+    swastika_liklihood = 100 * np.max(symbol_scores[1])
+    symbol_none_liklihood = 100 * np.max(symbol_scores[2])
 
     if os.path.isfile(scan_location):
         os.remove(scan_location)
