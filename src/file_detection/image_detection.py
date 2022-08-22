@@ -9,7 +9,7 @@ import uuid
 from tokenize import String
 
 CLASS_NAMES_SAFETY_NET = ['Gore', 'None', 'Pornographic', 'Racy']
-CLASS_NAMES_SYMBOL_NET = ['Hitler', 'Swastika', 'None']
+CLASS_NAMES_SYMBOL_NET = ['Hitler', 'None', 'Swastika']
 EXE_PATH = sys.path[0]
 
 def detect_image(image_url, image_extension, image_hash, safety_net_model, symbol_net_model) -> String:
