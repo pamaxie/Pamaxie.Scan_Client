@@ -1,11 +1,18 @@
 '''Primary entry point for the application'''
 
+
 import json
 import time
 from tokenize import String
 import env
+import sys
 import api_requests
 from file_detection import image_detection
+
+from tensorflow import keras
+from keras.models import load_model
+
+EXE_PATH = sys.path[0]
 
 def login_api() -> String:
     '''Authenticates with our API and returns the JWT bearer Token()'''
@@ -15,13 +22,12 @@ def login_api() -> String:
 
     return api_requests.get_jwt_token(auth_token)
 
-def get_work_loop(jwt_token):
+def get_work_loop(jwt_token, safety_net_model, symbol_net_model):
     '''Start requesting work from our scanning api'''
     print("Entering primary work loop to check for scans. This will run indefinetly until we hit an error.")
 
     while True:
         time.sleep(0.2)
-        print("Starting to look for work now...")
         work_result = api_requests.get_work(jwt_token)
 
         if work_result is None:
@@ -37,7 +43,6 @@ def get_work_loop(jwt_token):
 
 
         if work_result[0] == 408:
-            print("We couldn't find any work for now.")
             continue
 
         if work_result[1] is None:
@@ -60,7 +65,7 @@ def get_work_loop(jwt_token):
 
         if data_type == "image":
             print("Starting detection for image with hash: " + image_hash)
-            scan_result = image_detection.detect_image(scan_url, data_extension, image_hash)
+            scan_result = image_detection.detect_image(scan_url, data_extension, image_hash, safety_net_model, symbol_net_model)
 
             #Invalid or maleformed scan result means something went wrong during the process and we'll ignore this scan request for now
             if scan_result is None or scan_result == "":
@@ -79,14 +84,20 @@ def get_work_loop(jwt_token):
 
 
 
-
 print("Starting the validation of our required enviorement variables...")
 env.check_env_vars()
 print("Done validating environment variables.")
+print("Loading ML Models")
+ACTIVE_SAFETY_NET_MODEL_PATH = EXE_PATH + "/Models/SafetyNet"
+ACTIVE_SYMBOL_NET_MODEL_PATH = EXE_PATH + "/Models/SymbolNet"
+
+model = load_model(ACTIVE_SAFETY_NET_MODEL_PATH)
+symbol_model = load_model(ACTIVE_SYMBOL_NET_MODEL_PATH)
+print("Finished loading models")
 print("Starting the application...")
 jwt_token = login_api()
 
 if jwt_token is None or jwt_token == "":
     print("Could not retrieve a valid jwt bearer token from our api. Please ensure your enviorement variables are correct. Exiting now...")
     exit(-1)
-get_work_loop(jwt_token)
+get_work_loop(jwt_token, model, symbol_model)

@@ -3,6 +3,8 @@ from tokenize import String
 import requests
 import json
 import env
+import sys
+import os
 
 def test_connection() -> bool:
     '''Test if the API is available for requests'''
@@ -63,6 +65,7 @@ def post_result(jwt_token, work_result) -> bool:
         if response.status_code == 200:
             return True
 
+        print("Failed sending the result back to the scan api. Recieved error code: " + str(response.status_code))
         return False
     except requests.exceptions.ConnectionError:
         return False
@@ -83,3 +86,4 @@ def get_work(jwt_token):
         return response.status_code, None
     except requests.exceptions.ConnectionError:
         return None
+
