@@ -1,10 +1,12 @@
 '''Primary entry point for the application'''
+from genericpath import isdir
 import json
 import time
 from tokenize import String
 import requests
 import env
 import sys
+import os
 import api_requests
 from file_detection import image_detection
 
@@ -96,5 +98,9 @@ jwt_token = login_api()
 if jwt_token is None or jwt_token == "":
     print("Could not retrieve a valid jwt bearer token from our api. Please ensure your enviorement variables are correct. Exiting now...")
     exit(-1)
+
+#Create our File Cache Folder if it doesn't exist
+if not os.path.isdir(sys.path[0] + "/File_Cache"):
+    os.makedirs(sys.path[0] + "/File_Cache")
 
 get_work_loop(jwt_token, model, symbol_model)
