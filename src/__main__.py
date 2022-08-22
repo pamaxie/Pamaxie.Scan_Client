@@ -1,9 +1,8 @@
 '''Primary entry point for the application'''
-
-
 import json
 import time
 from tokenize import String
+import requests
 import env
 import sys
 import api_requests
@@ -16,10 +15,10 @@ EXE_PATH = sys.path[0]
 
 def login_api() -> String:
     '''Authenticates with our API and returns the JWT bearer Token()'''
-    print("Authenticating with the API...")
+    print("Authenticating with the API with token: " + env.get_api_token())
+    
     auth_token = env.get_api_token()
     api_requests.test_connection()
-
     return api_requests.get_jwt_token(auth_token)
 
 def get_work_loop(jwt_token, safety_net_model, symbol_net_model):
@@ -81,8 +80,6 @@ def get_work_loop(jwt_token, safety_net_model, symbol_net_model):
 
             #Exiting the system here to prevent wrongful polling of data that could cause harm.
             exit(-1)
-
-
 
 print("Starting the validation of our required enviorement variables...")
 env.check_env_vars()

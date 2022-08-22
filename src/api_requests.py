@@ -19,11 +19,17 @@ def test_connection() -> bool:
             if payload is not None and payload.get("SCAN_STATUS") == "Ok" and payload.get("DB_STATUS") == "Ok":
                 print("Scanning API is available and database is available.")
                 return True
+            elif payload is not None and payload.get("DB_STATUS") == "Ok":
+                print("Scanning API is not available and database is available.")
+                return False
+            elif payload is not None and payload.get("SCAN_STATUS") == "Ok":
+                print("Scanning API is available and database is not available.")
+                return False
 
-        print("Some of our API endpoints are not available. Please try again later or check your internet connection.")
+        print("Some of our API endpoints are not available. Please try again later or check your internet connection and authentication token.")
         return False
     except requests.exceptions.ConnectionError:
-        print("Some of our API endpoints are not available. Please try again later or check your internet connection.")
+        print("There was a failure attempting to connect to our servers. Please check your internet connection.")
         return False
 
 def get_jwt_token(auth_token) -> String:
