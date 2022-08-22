@@ -12,6 +12,8 @@ def test_connection() -> bool:
 
     try:
         request_url = env.get_scan_endpoint() + "scan/v1/status"
+
+        print("Requesting server availability from: " + request_url)
         response = requests.get(request_url)
         if response.status_code == 200:
             print("Response on servers being up was:")
