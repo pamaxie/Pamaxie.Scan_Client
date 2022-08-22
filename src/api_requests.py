@@ -43,6 +43,8 @@ def get_jwt_token(auth_token) -> String:
         response = requests.get(request_url, headers={"Authorization": "Token " + auth_token})
 
         if response.status_code == 200:
+            print("Retrieved response while attempting to refresh JWT Token.")
+            print(response.text)
             payload = json.loads(response.text)
 
             if payload is not None and payload.get("Token") != "":
@@ -51,8 +53,10 @@ def get_jwt_token(auth_token) -> String:
                 if token_payload.get("Token") != "":
                     return token_payload.get("Token")
 
+        print("Unknown status code while attempting to retrieve JWT Token. Response code was: " + str(response.status_code))
         return None
     except requests.exceptions.ConnectionError:
+        print("Ran into connection error while attempting to connect with our API")
         return None
 
 def post_result(jwt_token, work_result) -> bool:

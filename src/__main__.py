@@ -94,6 +94,8 @@ print("Finished loading models")
 print("Starting the application...")
 jwt_token = login_api()
 
+print("Retrieved auth token: " + jwt_token)
+
 if jwt_token is None or jwt_token == "":
     print("Could not retrieve a valid jwt bearer token from our api. Please ensure your enviorement variables are correct. Exiting now...")
     exit(-1)
