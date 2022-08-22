@@ -14,17 +14,13 @@ def test_connection() -> bool:
         request_url = env.get_scan_endpoint() + "scan/v1/status"
         response = requests.get(request_url)
         if response.status_code == 200:
+            print("Response on servers being up was:")
+            print(response.text)
             payload = json.loads(response.text)
 
             if payload is not None and payload.get("SCAN_STATUS") == "Ok" and payload.get("DB_STATUS") == "Ok":
                 print("Scanning API is available and database is available.")
                 return True
-            elif payload is not None and payload.get("DB_STATUS") == "Ok":
-                print("Scanning API is not available and database is available.")
-                return False
-            elif payload is not None and payload.get("SCAN_STATUS") == "Ok":
-                print("Scanning API is available and database is not available.")
-                return False
 
         print("Some of our API endpoints are not available. Please try again later or check your internet connection and authentication token.")
         return False
@@ -44,10 +40,11 @@ def get_jwt_token(auth_token) -> String:
 
         if response.status_code == 200:
             print("Retrieved response while attempting to refresh JWT Token.")
-            print(response.text)
+
             payload = json.loads(response.text)
 
             if payload is not None and payload.get("Token") != "":
+                payload = json.loads(response.text)
                 token_payload = payload.get("Token")
 
                 if token_payload.get("Token") != "":
